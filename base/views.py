@@ -44,6 +44,28 @@ class GuestProfileApiView(generics.GenericAPIView):
         serializer = self.serializer_class(guest_data)
         return Response(serializer.data)
     
+    def put(self,request,pk=None):
+        guest_data = GuestProfile.objects.get(id=pk)
+        serializer = self.serializer_class(guest_data,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('Data updated!')
+        else:
+            return Response(serializer.errors)
+        
+    def patch(self,request,pk=None):
+        guest_data = GuestProfile.objects.get(id=pk)
+        serializer = self.serializer_class(guest_data,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('Data updated!')
+        else:
+            return Response(serializer.errors)
+        
+    def delete(self,request,pk=None):
+        guest_data = GuestProfile.objects.get(id=pk)
+        guest_data.delete()
+        return Response('Data deleted successfully!')
     
 
 class GuestProfileListApiView(generics.GenericAPIView):
@@ -59,7 +81,7 @@ class GuestProfileListApiView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response('Guest profile created!')
         else:
             return Response(serializer.errors)
 
