@@ -1,11 +1,25 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+usertype_list = [('Frontdesk','Frontdesk'),('Admin','Admin'),('Accounting','Accounting'),('Restaurant','Restaurant')]
+
+class User(AbstractUser):
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=300)
+    username = models.CharField(max_length=200,default='Hari')
+    usertype = models.CharField(max_length=50,choices=usertype_list)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username',]
+
 class GuestProfile(models.Model):
-    guest_name = models.CharField(max_length=100)
+    guest_name = models.CharField(max_length=100) # null=True,default='hari',blank=True
     guest_age = models.IntegerField()
     guest_address = models.CharField(max_length=300)
     guest_number = models.BigIntegerField()
+    created_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
 
 class GuestOrganization(models.Model):
     organization_name = models.CharField(max_length=300)
